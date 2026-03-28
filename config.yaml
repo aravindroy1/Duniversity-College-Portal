@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: col-cfg
 data:
-  MARIADB_ROOT_PASSWORD: "Root@123"
+  MYSQL_ROOT_PASSWORD: "Root@123"   # ✅ FIXED
   DB_USER: "college_user"
   DB_PASSWORD: "deereddy@123"
   DB_HOST: "mariadb"
@@ -11,4 +11,4 @@ data:
   GRIEVANCE_DB: "grievance_db"
   LEAVE_DB: "leave_db"
   TIMETABLE_DB: "timetable_db"
-  EXAMS_DB: "exams_db"
+  EXAMS_DB: "exams_db"  

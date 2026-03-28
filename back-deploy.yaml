@@ -1,49 +1,65 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
-  name: mariadb-deploy
+  name: mariadb
+  labels:
+    app: mariadb
 spec:
-  replicas: 1
+  ports:
+  - port: 3306
+    name: db
+  clusterIP: None
+  selector:
+    app: mariadb
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mariadb
+spec:
   selector:
     matchLabels:
-      app: mariadb
+      app: mariadb   # must match template labels
+  serviceName: "mariadb"
+  replicas: 3
+  minReadySeconds: 10
+
   template:
     metadata:
       labels:
-        app: mariadb
+        app: mariadb   # must match selector
     spec:
+      terminationGracePeriodSeconds: 10
+
       containers:
       - name: mariadb
         image: mariadb:10.5
+
         ports:
         - containerPort: 3306
+          name: db
 
         envFrom:
-        - configMapRef:
-            name: col-cfg
+          - configMapRef:
+              name: col-cfg
 
         volumeMounts:
         - name: mariadb-storage
           mountPath: /var/lib/mysql
         - name: schema-volume
-          mountPath: /docker-entrypoint-initdb.d/  # ✅ MariaDB auto-init folder
+          mountPath: /docker-entrypoint-initdb.d/
 
       volumes:
-      - name: mariadb-storage
-        persistentVolumeClaim:
-          claimName: mariadb-pvc
-      - name: schema-volume
+      - name: schema-volume  
         configMap:
           name: mariadb-schema
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mariadb
-spec:
-  selector:
-    app: mariadb
-  ports:
-    - port: 3306
-      targetPort: 3306
-  type: ClusterIP
+
+  volumeClaimTemplates:
+  - metadata:
+      name: mariadb-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "nfs-csi-storage"
+      resources:
+        requests:
+          storage: 1Gi
