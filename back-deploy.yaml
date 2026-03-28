@@ -21,7 +21,7 @@ spec:
     matchLabels:
       app: mariadb   # must match template labels
   serviceName: "mariadb"
-  replicas: 3
+  replicas: 1
   minReadySeconds: 10
 
   template:
@@ -62,4 +62,4 @@ spec:
       storageClassName: "nfs-csi-storage"
       resources:
         requests:
-          storage: 500Mi
+          storage: 1Gi
