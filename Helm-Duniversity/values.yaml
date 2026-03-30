@@ -1,0 +1,12 @@
+app:
+  name: college-deploy
+
+replicaCount: 2
+
+
+image:
+  respository: ashutosh4782/duniversity-college-portal-backend
+  tag: latest
+
+ports:
+  - containerPort: 3000
