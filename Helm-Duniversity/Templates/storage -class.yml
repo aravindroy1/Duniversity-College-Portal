@@ -1,0 +1,10 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs-csi-storage
+provisioner: nfs.csi.k8s.io
+parameters:
+  server: 43.205.254.146
+  share: /nfs-data   # ✅ your existing folder
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
