@@ -3,7 +3,6 @@ app:
 
 replicaCount: 3
 
-
 image:
   repository: ashutosh4782/duniversity-college-portal-backend
   tag: latest
